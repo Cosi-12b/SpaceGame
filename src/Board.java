@@ -3,6 +3,7 @@ import java.util.Random;
 public class Board {
   private int size;
   private Star[][] stars;
+  private Planet[][] planets;
   
   void initN(int n) {
     size = n;
@@ -13,6 +14,7 @@ public class Board {
   void initGame() {
     System.out.println("Game is initialzied");
     placeStars();
+    placePlanets();
   }
   
   void beginGame() {
@@ -21,6 +23,7 @@ public class Board {
   
   void createBoard() {
     stars = new Star[size][size];
+    planets = new Planet[size][size];
   }
   
   void endGame() {
@@ -28,9 +31,28 @@ public class Board {
   }
   
   void placeStars() {
+    System.out.printf("Placing stars: %d\n", size/3);
     for (int i=0; i < size/3; i++) {
       createAndPlaceStarRandomly();
     }
+  }
+  
+  void placePlanets() {
+    System.out.printf("Placing planets: %d\n", size/2);
+    for (int i=0; i < size / 2; i++) {
+      createAndPlacePlanetRandomly();
+    }
+  }
+  
+  void createAndPlacePlanetRandomly() {
+    int rx, ry;
+    Random r = new Random();
+    do {    
+      rx = r.nextInt(size);
+      ry = r.nextInt(size);
+    } while (!isFree(rx, ry));
+    System.out.printf("Placing planet at %d %d\n", rx, ry);
+    planets[rx][ry] = new Planet();
   }
   
   void createAndPlaceStarRandomly() {
@@ -39,21 +61,23 @@ public class Board {
     do {    
       rx = r.nextInt(size);
       ry = r.nextInt(size);
-    } while (stars[rx][ry] != null);
+    } while (!isFree(rx, ry));
     System.out.printf("Placing star at %d %d\n", rx, ry);
     stars[rx][ry] = new Star();
   }
   
   boolean isFree(int x, int y) {
-    return (stars[x][y] == null);
+    return ((stars[x][y] == null) && (planets[x][y] == null));
   }
   
   void printBoard() {
     for (int i=0; i<size; i++) {
       for (int j=0; j<size; j++) {
-        if (stars[i][j]==null) {
+        if (isFree(i, j)) {
           System.out.print(" . ");
-        } else {
+        } else if (planets[i][j] != null) {
+          System.out.print(" o ");
+        } else if (stars[i][j] != null) {
           System.out.print(" * ");
         }      
       } 
