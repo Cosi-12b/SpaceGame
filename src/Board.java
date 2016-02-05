@@ -2,8 +2,7 @@ import java.util.Random;
 
 public class Board {
   private int size;
-  private Star[][] stars;
-  private Planet[][] planets;
+  private Entity[][] space;
   
   void initN(int n) {
     size = n;
@@ -22,8 +21,7 @@ public class Board {
   }
   
   void createBoard() {
-    stars = new Star[size][size];
-    planets = new Planet[size][size];
+    space = new Entity[size][size];
   }
   
   void endGame() {
@@ -52,7 +50,7 @@ public class Board {
       ry = r.nextInt(size);
     } while (!isFree(rx, ry));
     System.out.printf("Placing planet at %d %d\n", rx, ry);
-    planets[rx][ry] = new Planet();
+    space[rx][ry] = new Planet();
   }
   
   void createAndPlaceStarRandomly() {
@@ -63,11 +61,11 @@ public class Board {
       ry = r.nextInt(size);
     } while (!isFree(rx, ry));
     System.out.printf("Placing star at %d %d\n", rx, ry);
-    stars[rx][ry] = new Star();
+    space[rx][ry] = new Star();
   }
   
   boolean isFree(int x, int y) {
-    return ((stars[x][y] == null) && (planets[x][y] == null));
+    return (space[x][y] == null);
   }
   
   void printBoard() {
@@ -75,10 +73,8 @@ public class Board {
       for (int j=0; j<size; j++) {
         if (isFree(i, j)) {
           System.out.print(" . ");
-        } else if (planets[i][j] != null) {
-          System.out.print(" o ");
-        } else if (stars[i][j] != null) {
-          System.out.print(" * ");
+        } else {
+          System.out.print(space[i][j].tinyString());
         }      
       } 
       System.out.println("");

@@ -1,8 +1,11 @@
 
-public class Planet {
+public class Planet extends Entity {
   boolean home;
   
   Planet() {
-    System.out.println("Placing star.");
+    System.out.println("Placing planet.");
+  }
+  public String tinyString() {
+    return (" o ");
   }
 }

@@ -1,4 +1,6 @@
 
-public class Star {
-
+public class Star extends Entity {
+  public String tinyString() {
+    return (" * ");
+  }
 }
