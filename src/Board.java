@@ -14,6 +14,7 @@ public class Board {
     System.out.println("Game is initialzied");
     placeStars();
     placePlanets();
+    placeSpaceShips();
   }
   
   void beginGame() {
@@ -28,43 +29,47 @@ public class Board {
     System.out.println("Game has been ended");
   }
   
-  void placeStars() {
-    System.out.printf("Placing stars: %d\n", size/3);
+  private void placeStars() {
+    System.out.printf("Creating and placing: %d stars\n", size/3);
     for (int i=0; i < size/3; i++) {
-      createAndPlaceStarRandomly();
+      Star aStar = new Star();
+      creatAndPlaceEntityRandomly(aStar);
     }
   }
   
-  void placePlanets() {
-    System.out.printf("Placing planets: %d\n", size/2);
+  private void placePlanets() {
+    System.out.printf("Creating and placing: %d planets\n", size/2);
     for (int i=0; i < size / 2; i++) {
-      createAndPlacePlanetRandomly();
+      Planet planet = new Planet();
+      creatAndPlaceEntityRandomly(planet);
     }
   }
   
-  void createAndPlacePlanetRandomly() {
+  private void placeSpaceShips() {
+    Random r = new Random();
+    for (Entity[] eRow: space) {
+      for (Entity ent: eRow) {
+        if (!(ent instanceof Planet)) continue;
+        // A planet gets a spaceship with probability 0.3
+        if (r.nextFloat() >= 0.3) continue;
+        Planet plan = (Planet) ent;
+        SpaceShip ship = new SpaceShip();
+        plan.addSpaceShip(ship);
+      }
+    }
+  }
+  
+  private void creatAndPlaceEntityRandomly(Entity ent) {
     int rx, ry;
     Random r = new Random();
     do {    
       rx = r.nextInt(size);
       ry = r.nextInt(size);
     } while (!isFree(rx, ry));
-    System.out.printf("Placing planet at %d %d\n", rx, ry);
-    space[rx][ry] = new Planet();
+    space[rx][ry] = ent;
   }
   
-  void createAndPlaceStarRandomly() {
-    int rx, ry;
-    Random r = new Random();
-    do {    
-      rx = r.nextInt(size);
-      ry = r.nextInt(size);
-    } while (!isFree(rx, ry));
-    System.out.printf("Placing star at %d %d\n", rx, ry);
-    space[rx][ry] = new Star();
-  }
-  
-  boolean isFree(int x, int y) {
+  private boolean isFree(int x, int y) {
     return (space[x][y] == null);
   }
   
@@ -72,7 +77,7 @@ public class Board {
     for (int i=0; i<size; i++) {
       for (int j=0; j<size; j++) {
         if (isFree(i, j)) {
-          System.out.print(" . ");
+          System.out.print("  .   ");
         } else {
           System.out.print(space[i][j].tinyString());
         }      

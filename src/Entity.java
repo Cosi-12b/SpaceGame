@@ -1,7 +1,7 @@
 
 abstract public class Entity {
   public String tinyString () {
-    return "???";
+    return "??????"; // This should never be called!
   }
 
 }
