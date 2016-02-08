@@ -14,7 +14,7 @@ public class Board {
     System.out.println("Game is initialzied");
     placeStars();
     placePlanets();
-    placeSpaceShips();
+    placeSpaceShipsAndPeople();
   }
   
   void beginGame() {
@@ -45,19 +45,28 @@ public class Board {
     }
   }
   
-  private void placeSpaceShips() {
+  private void placeSpaceShipsAndPeople() {
     Random r = new Random();
     for (Entity[] eRow: space) {
       for (Entity ent: eRow) {
-        if (!(ent instanceof Planet)) continue;
-        // A planet gets a spaceship with probability 0.3
-        if (r.nextFloat() >= 0.3) continue;
-        Planet plan = (Planet) ent;
-        SpaceShip ship = new SpaceShip();
-        plan.addSpaceShip(ship);
+        if (ent instanceof Planet) {
+          Planet plan = (Planet) ent;
+
+          // A planet gets a spaceship based on probability
+          if (r.nextFloat() <= 0.5) { 
+            SpaceShip ship = new SpaceShip();
+            plan.addSpaceShip(ship);
+          }
+          // A planet gets a person based on probability
+          if (r.nextFloat() <= 0.5) { 
+            Person pers = new Person();
+            plan.addPerson(pers);
+          }
+        }
       }
     }
   }
+  
   
   private void creatAndPlaceEntityRandomly(Entity ent) {
     int rx, ry;
@@ -77,12 +86,13 @@ public class Board {
     for (int i=0; i<size; i++) {
       for (int j=0; j<size; j++) {
         if (isFree(i, j)) {
-          System.out.print("  .   ");
+          System.out.print("   .   ");
         } else {
           System.out.print(space[i][j].tinyString());
         }      
       } 
       System.out.println("");
     }
+    System.out.println("Notation Planet: P:#nstars:#npeople");
   }
 }
