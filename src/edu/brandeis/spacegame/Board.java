@@ -1,24 +1,47 @@
+package edu.brandeis.spacegame;
+import java.util.LinkedList;
 import java.util.Random;
+import java.util.logging.Logger;
 
 public class Board {
   private int size;
   private Entity[][] space;
+  private LinkedList<Simulable> sims;
+  private static final Logger logger = Logger.getLogger(Board.class.getName());
+  private int clock;
+  boolean keepRunning;
+
   
-  void initN(int n) {
+  void initGame(int n) {
     size = n;
     createBoard();
-    System.out.printf("Board initialized as %d x %d\n", n, n);
-  }
-  
-  void initGame() {
-    System.out.println("Game is initialzied");
+    logger.info(String.format("Board initialized as %d x %d\n", n, n));
+    sims = new LinkedList<Simulable>();
     placeStars();
     placePlanets();
     placeSpaceShipsAndPeople();
+    logger.info(String.format("Game is initialized"));
   }
-  
+
+  public void gameLoop() {
+    clock = 0;
+    keepRunning = true;
+    while (keepRunning) {
+      gamePulse(clock);
+      printBoard(clock);
+      clock++;
+    }
+  }
+
+  private void gamePulse(int curTime) {
+    for (Simulable s: sims) {
+      s.simulationStep(curTime);
+    }
+    
+  }
+
   void beginGame() {
-    System.out.println("Game has been started");    
+    logger.info(String.format("Game is started"));
   }
   
   void createBoard() {
@@ -26,7 +49,7 @@ public class Board {
   }
   
   void endGame() {
-    System.out.println("Game has been ended");
+    logger.info(String.format("Game is ended"));
   }
   
   private void placeStars() {
@@ -41,6 +64,7 @@ public class Board {
     System.out.printf("Creating and placing: %d planets\n", size/2);
     for (int i=0; i < size / 2; i++) {
       Planet planet = new Planet();
+      sims.add(planet);
       creatAndPlaceEntityRandomly(planet);
     }
   }
@@ -55,12 +79,14 @@ public class Board {
           // A planet gets a spaceship based on probability
           if (r.nextFloat() <= 0.5) { 
             SpaceShip ship = new SpaceShip();
+            sims.add(ship);
             plan.addSpaceShip(ship);
           }
           // A planet gets a person based on probability
           if (r.nextFloat() <= 0.5) { 
             Person pers = new Person();
             plan.addPerson(pers);
+            sims.add(pers);
           }
         }
       }
@@ -82,7 +108,8 @@ public class Board {
     return (space[x][y] == null);
   }
   
-  void printBoard() {
+  void printBoard(int now) {
+    logger.info(String.format("\fTime is: %d%n", now));
     for (int i=0; i<size; i++) {
       for (int j=0; j<size; j++) {
         if (isFree(i, j)) {
@@ -95,4 +122,5 @@ public class Board {
     }
     System.out.println("Notation Planet: P:#nstars:#npeople");
   }
+
 }

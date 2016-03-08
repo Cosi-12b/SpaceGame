@@ -1,3 +1,4 @@
+package edu.brandeis.spacegame;
 
 abstract public class Entity {
   public String tinyString () {
