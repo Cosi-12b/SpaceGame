@@ -3,7 +3,7 @@ import java.util.List;
 
 public class Planet extends Entity {
   boolean home;
-  List<SpaceShip> ships = new ArrayList<SpaceShip>();
+  ArrayList<SpaceShip> ships = new ArrayList<SpaceShip>();
   List<Person> people = new ArrayList<Person>();
   
   Planet() {

@@ -30,7 +30,7 @@ public class Board {
   }
   
   private void placeStars() {
-    System.out.printf("Creating and placing: %d stars\n", size/3);
+    System.out.printf("Creating and placing: %d stars%n", size/3);
     for (int i=0; i < size/3; i++) {
       Star aStar = new Star();
       creatAndPlaceEntityRandomly(aStar);
@@ -38,7 +38,7 @@ public class Board {
   }
   
   private void placePlanets() {
-    System.out.printf("Creating and placing: %d planets\n", size/2);
+    System.out.printf("Creating and placing: %d planets%n", size/2);
     for (int i=0; i < size / 2; i++) {
       Planet planet = new Planet();
       creatAndPlaceEntityRandomly(planet);
@@ -88,7 +88,7 @@ public class Board {
         if (isFree(i, j)) {
           System.out.print("   .   ");
         } else {
-          System.out.print(space[i][j].tinyString());
+          System.err.print(space[i][j].tinyString());
         }      
       } 
       System.out.println("");
