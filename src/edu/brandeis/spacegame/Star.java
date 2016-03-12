@@ -9,7 +9,6 @@ public class Star extends Entity implements Simulable {
 		return ("  star  ");
 	}
 
-	@Override
 	public void simulationStep(int time) {
 	  logger.fine(String.format("Simstep %d%n", time));
 	}
