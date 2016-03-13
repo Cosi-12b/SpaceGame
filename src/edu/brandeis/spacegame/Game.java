@@ -6,7 +6,7 @@ import java.util.logging.SimpleFormatter;
 
 public class Game {
   private int size;
-  private Entity[][] space;
+  private Space space;
   private LinkedList<Simulable> sims;
   private static final Logger logger = Logger.getLogger(Game.class.getName());
   private int clock;
@@ -52,7 +52,7 @@ public class Game {
   }
   
   void createBoard() {
-    space = new Entity[size][size];
+    space = new Space(size);
   }
   
   void endGame() {
@@ -68,15 +68,19 @@ public class Game {
   }
   
   private void placePlanets() {
-    logger.info(String.format("Creating and placing: %d planets", size/2));
-    for (int i=0; i < size / 2; i++) {
+    int totalSectors = space.getCountSectors();
+    int planetsToAdd = (int) (totalSectors * Constants.PROB_PLANET_IN_SECTOR);
+    logger.info(String.format("Creating and placing: %d planets", planetsToAdd));
+    for (int i = 0; i < planetsToAdd ; i++) {
       Planet planet = new Planet();
       sims.add(planet);
-      creatAndPlaceEntityRandomly(planet);
+      space.placeEntityRandomly(planet);      
     }
   }
   
   private void placeSpaceShipsAndPeople() {
+    
+    
     Random r = new Random();
     for (Entity[] eRow: space) {
       for (Entity ent: eRow) {
