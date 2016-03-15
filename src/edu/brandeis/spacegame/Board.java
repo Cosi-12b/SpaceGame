@@ -1,4 +1,5 @@
 package edu.brandeis.spacegame;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -23,13 +24,10 @@ public class Board {
     logger.info(String.format("Game is initialized"));
   }
 
-  public void gameLoop() {
-    clock = 0;
-    keepRunning = true;
-    while (keepRunning) {
+  public void gameLoop() throws IOException {
+    for (clock = 0; clock < 20; clock ++) {
       gamePulse(clock);
       printBoard(clock);
-      clock++;
     }
   }
 
@@ -108,8 +106,9 @@ public class Board {
     return (space[x][y] == null);
   }
   
-  void printBoard(int now) {
-    logger.info(String.format("\fTime is: %d%n", now));
+  void printBoard(int now) throws IOException {
+    Runtime.getRuntime().exec("clear");
+    System.out.println(String.format("Time is: %d%n", now));
     for (int i=0; i<size; i++) {
       for (int j=0; j<size; j++) {
         if (isFree(i, j)) {
