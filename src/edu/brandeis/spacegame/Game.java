@@ -3,20 +3,22 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
-public class Board {
+public class Game {
   private int size;
   private Entity[][] space;
   private LinkedList<Simulable> sims;
-  private static final Logger logger = Logger.getLogger(Board.class.getName());
+  private static final Logger logger = Logger.getLogger(Game.class.getName());
   private int clock;
   boolean keepRunning;
 
   
   void initGame(int n) {
+    sysConfig();
     size = n;
     createBoard();
-    logger.info(String.format("Board initialized as %d x %d\n", n, n));
+    logger.info(String.format("Board initialized as %d x %d", n, n));
     sims = new LinkedList<Simulable>();
     placeStars();
     placePlanets();
@@ -24,16 +26,24 @@ public class Board {
     logger.info(String.format("Game is initialized"));
   }
 
-  public void gameLoop() throws IOException {
-    for (clock = 0; clock < 20; clock ++) {
-      gamePulse(clock);
-      printBoard(clock);
+  public void gameLoop() {
+    clock = 0;
+    while (keepRunning()) {
+      gamePulse();
+//      printBoard(clock);
+      clock++;
     }
   }
+  
+  private boolean keepRunning() {
+    return (clock < 25);
+  }
 
-  private void gamePulse(int curTime) {
+  private void gamePulse() {
+    logger.info("");
+    logger.info(String.format("*** Clock: %d", clock));
     for (Simulable s: sims) {
-      s.simulationStep(curTime);
+      s.simulationStep(clock);
     }
     
   }
@@ -51,7 +61,7 @@ public class Board {
   }
   
   private void placeStars() {
-    System.out.printf("Creating and placing: %d stars\n", size/3);
+    logger.info(String.format("Creating and placing: %d stars", size/3));
     for (int i=0; i < size/3; i++) {
       Star aStar = new Star();
       creatAndPlaceEntityRandomly(aStar);
@@ -59,7 +69,7 @@ public class Board {
   }
   
   private void placePlanets() {
-    System.out.printf("Creating and placing: %d planets\n", size/2);
+    logger.info(String.format("Creating and placing: %d planets", size/2));
     for (int i=0; i < size / 2; i++) {
       Planet planet = new Planet();
       sims.add(planet);
@@ -74,11 +84,18 @@ public class Board {
         if (ent instanceof Planet) {
           Planet plan = (Planet) ent;
 
-          // A planet gets a spaceship based on probability
-          if (r.nextFloat() <= 0.5) { 
+          // A planet gets a spaceship and two people based on probability
+          if (r.nextFloat() <= Constants.PROB_SHIP_ON_PLANET) { 
             SpaceShip ship = new SpaceShip();
+            ship.setPlanetShipIsOn(plan);
             sims.add(ship);
             plan.addSpaceShip(ship);
+            Person pers = new Person();
+            plan.addPerson(pers);
+            sims.add(pers);
+            pers = new Person();
+            plan.addPerson(pers);
+            sims.add(pers);
           }
           // A planet gets a person based on probability
           if (r.nextFloat() <= 0.5) { 
@@ -90,7 +107,6 @@ public class Board {
       }
     }
   }
-  
   
   private void creatAndPlaceEntityRandomly(Entity ent) {
     int rx, ry;
@@ -106,9 +122,13 @@ public class Board {
     return (space[x][y] == null);
   }
   
-  void printBoard(int now) throws IOException {
-    Runtime.getRuntime().exec("clear");
-    System.out.println(String.format("Time is: %d%n", now));
+  void printBoard(int now) {
+    final String ANSI_CLS = "\u001b[2J";
+    final String ANSI_HOME = "\u001b[H";
+    System.out.print(ANSI_HOME);
+    System.out.flush();
+
+    logger.info(String.format("\fTime is: %d%n", now));
     for (int i=0; i<size; i++) {
       for (int j=0; j<size; j++) {
         if (isFree(i, j)) {
@@ -120,6 +140,13 @@ public class Board {
       System.out.println("");
     }
     System.out.println("Notation Planet: P:#nstars:#npeople");
+  }
+  
+  private void sysConfig() {
+    System.setProperty("java.util.logging.SimpleFormatter.format", 
+//      "%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$-6s %2$s %5$s%6$s%n");
+      "[%1$tH:%1$tM:%1$tS] %5$s%6$s%n");
+
   }
 
 }
