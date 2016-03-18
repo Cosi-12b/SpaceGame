@@ -14,8 +14,8 @@ public class Planet extends Entity implements Simulable {
   
   Planet() {
     Faker faker = new Faker();
-    this.setName(faker.name().firstName());
-    logger.info(String.format("Creating person: %s", name));
+    this.setName(faker.name().firstName() + "anus");
+    logger.info(String.format("Creating Planet: \"%s\"", name));
   }
   
   private void setName(String theName) {
@@ -23,7 +23,7 @@ public class Planet extends Entity implements Simulable {
   }
 
   public String tinyString() {
-    return (String.format(" P:%d:%d ", ships.size(), persons.size()));
+    return (String.format(" %s(%d,%d) ", name, ships.size(), persons.size()));
   }
 
   public void addSpaceShip(SpaceShip ship) {
@@ -32,6 +32,7 @@ public class Planet extends Entity implements Simulable {
   }
   
   public void addPerson(Person p) {
+    logger.info("Person " + p.getName() + " placed on " + name);
     persons.add(p);
   }
   

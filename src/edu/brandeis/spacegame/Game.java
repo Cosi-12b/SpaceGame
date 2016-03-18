@@ -21,7 +21,8 @@ public class Game {
     sims = new LinkedList<Simulable>();
     placeStars();
     placePlanets();
-    placeSpaceShipsAndPeople();
+    placeSpaceShips();
+    placePeople();
     logger.info(String.format("Game is initialized"));
   }
 
@@ -29,7 +30,6 @@ public class Game {
     clock = 0;
     while (keepRunning()) {
       gamePulse();
-//      printBoard(clock);
       clock++;
     }
   }
@@ -46,7 +46,7 @@ public class Game {
     }
     
   }
-
+  
   void beginGame() {
     logger.info(String.format("Game is started"));
   }
@@ -60,89 +60,44 @@ public class Game {
   }
   
   private void placeStars() {
-    logger.info(String.format("Creating and placing: %d stars", size/3));
-    for (int i=0; i < size/3; i++) {
+    int nStars = (int) (space.getCountSectors() * Constants.PROB_STAR_IN_SECTOR);
+    for (int i = 0; i < nStars; i++) {
       Star aStar = new Star();
-      creatAndPlaceEntityRandomly(aStar);
+      space.placeEntityRandomly(aStar);
+      sims.add(aStar);
     }
   }
   
   private void placePlanets() {
     int totalSectors = space.getCountSectors();
-    int planetsToAdd = (int) (totalSectors * Constants.PROB_PLANET_IN_SECTOR);
-    logger.info(String.format("Creating and placing: %d planets", planetsToAdd));
-    for (int i = 0; i < planetsToAdd ; i++) {
+    int nPlanets = (int) (totalSectors * Constants.PROB_PLANET_IN_SECTOR);
+    for (int i = 0; i < nPlanets ; i++) {
       Planet planet = new Planet();
-      sims.add(planet);
       space.placeEntityRandomly(planet);      
+      sims.add(planet);
     }
   }
   
-  private void placeSpaceShipsAndPeople() {
-    
-    
-    Random r = new Random();
-    for (Entity[] eRow: space) {
-      for (Entity ent: eRow) {
-        if (ent instanceof Planet) {
-          Planet plan = (Planet) ent;
-
-          // A planet gets a spaceship and two people based on probability
-          if (r.nextFloat() <= Constants.PROB_SHIP_ON_PLANET) { 
-            SpaceShip ship = new SpaceShip();
-            ship.setPlanetShipIsOn(plan);
-            sims.add(ship);
-            plan.addSpaceShip(ship);
-            Person pers = new Person();
-            plan.addPerson(pers);
-            sims.add(pers);
-            pers = new Person();
-            plan.addPerson(pers);
-            sims.add(pers);
-          }
-          // A planet gets a person based on probability
-          if (r.nextFloat() <= 0.5) { 
-            Person pers = new Person();
-            plan.addPerson(pers);
-            sims.add(pers);
-          }
-        }
-      }
+  private void placeSpaceShips() {
+    int totalPlanets = space.getCountPlanets();
+    int nSpaceShips = (int) (totalPlanets * Constants.PROB_SHIP_ON_PLANET);
+    for (int i = 0; i < nSpaceShips ; i++) {
+      SpaceShip ship = new SpaceShip();
+      Planet p = space.getRandomPlanet();
+      p.addSpaceShip(ship);
+      sims.add(ship);
     }
   }
   
-  private void creatAndPlaceEntityRandomly(Entity ent) {
-    int rx, ry;
-    Random r = new Random();
-    do {    
-      rx = r.nextInt(size);
-      ry = r.nextInt(size);
-    } while (!isFree(rx, ry));
-    space[rx][ry] = ent;
-  }
-  
-  private boolean isFree(int x, int y) {
-    return (space[x][y] == null);
-  }
-  
-  void printBoard(int now) {
-    final String ANSI_CLS = "\u001b[2J";
-    final String ANSI_HOME = "\u001b[H";
-    System.out.print(ANSI_HOME);
-    System.out.flush();
-
-    logger.info(String.format("\fTime is: %d%n", now));
-    for (int i=0; i<size; i++) {
-      for (int j=0; j<size; j++) {
-        if (isFree(i, j)) {
-          System.out.print("   .   ");
-        } else {
-          System.out.print(space[i][j].tinyString());
-        }      
-      } 
-      System.out.println("");
+  private void placePeople() {
+    int totalPlanets = space.getCountPlanets();
+    int nPeople = (int) (totalPlanets * Constants.PROB_PERSON_ON_PLANET);
+    for (int i = 0; i < nPeople; i++) {
+      Person pers = new Person();
+      sims.add(pers);
+      Planet planit = space.getRandomPlanet();
+      planit.addPerson(pers);
     }
-    System.out.println("Notation Planet: P:#nstars:#npeople");
   }
   
   private void sysConfig() {

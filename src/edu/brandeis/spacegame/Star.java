@@ -6,7 +6,7 @@ public class Star extends Entity implements Simulable {
   private static final Logger logger = Logger.getLogger(Star.class.getName());
 
 	public String tinyString() {
-		return ("  star  ");
+		return ("Star");
 	}
 
 	public void simulationStep(int time) {

@@ -32,6 +32,9 @@ public class Coordinates {
     return new Coordinates(randGen.nextInt(size), randGen.nextInt(size));
   }
   
+  public String toString() {
+    return "["+ x + "," + y + "]";
+  }
   
 
 }

@@ -16,7 +16,7 @@ public class SpaceShip implements Simulable {
   
   SpaceShip() {
     Faker faker = new Faker();
-    this.setName(faker.name().firstName());
+    this.setName("SS " + faker.name().firstName());
     logger.info(String.format("Creating Ship: \"%s\"", name));
   }
   
@@ -64,6 +64,7 @@ public class SpaceShip implements Simulable {
   }
 
   public void setPlanetShipIsOn(Planet planetShipIsOn) {
+    logger.info("Ship " + name + " begins on " + planetShipIsOn.tinyString());
     this.planetShipIsOn = planetShipIsOn;
   }
 
