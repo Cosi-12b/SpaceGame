@@ -37,8 +37,7 @@ public class Board {
       creatAndPlaceStarRandomly();
     }
   }
-  
-//    
+   
   private void creatAndPlaceStarRandomly() {
     int rx, ry;
     Random r = new Random();
@@ -53,7 +52,20 @@ public class Board {
     return (stars[x][y] == null);
   }
 
-  
+  void printBoard() {
+    for (int i=0; i<size; i++) {
+      for (int j=0; j<size; j++) {
+        if (isFree(i, j)) {
+          System.out.print("  .  ");
+        } else {
+          System.out.print(stars[i][j].toString());
+        }      
+      } 
+      System.out.println("");
+    }
+    System.out.println("Notation Planet: P:#nstars:#npeople");
+  }
+
 //  private void creatAndPlacePlanetRandomly() {
 //    int rx, ry;
 //    Random r = new Random();
@@ -72,18 +84,4 @@ public class Board {
 //}
 //
 //
-  
-  void printBoard() {
-    for (int i=0; i<size; i++) {
-      for (int j=0; j<size; j++) {
-        if (isFree(i, j)) {
-          System.out.print("  .  ");
-        } else {
-          System.out.print(stars[i][j].toString());
-        }      
-      } 
-      System.out.println("");
-    }
-    System.out.println("Notation Planet: P:#nstars:#npeople");
-  }
 }
