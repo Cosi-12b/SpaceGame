@@ -5,7 +5,7 @@ import java.util.Random;
 public class Board {
   private int size;
   private Star[][] stars;
-//  private Planets[] planets;
+ // private Planets[] planets;
   
   void initN(int n) {
     size = n;
@@ -15,7 +15,7 @@ public class Board {
   
   void initGame() {
     System.out.println("Game is initialzied");
-//    placeStars();
+    placeStars();
 //    placePlanets();
   }
   
