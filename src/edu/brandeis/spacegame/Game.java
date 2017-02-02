@@ -1,8 +1,6 @@
 package edu.brandeis.spacegame;
 import java.util.LinkedList;
-import java.util.Random;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class Game {
   private int size;
