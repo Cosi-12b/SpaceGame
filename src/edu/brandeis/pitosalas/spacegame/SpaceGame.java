@@ -1,3 +1,4 @@
+package edu.brandeis.pitosalas.spacegame;
 public class SpaceGame {
   public static void main(String[] args) {
     int n = 15;

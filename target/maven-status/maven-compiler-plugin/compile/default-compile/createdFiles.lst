@@ -1,0 +1,8 @@
+edu/brandeis/spacegame/Entity.class
+edu/brandeis/spacegame/Planet.class
+edu/brandeis/spacegame/SpaceGame.class
+edu/brandeis/spacegame/Board.class
+edu/brandeis/spacegame/Person.class
+edu/brandeis/spacegame/Star.class
+edu/brandeis/spacegame/Simulable.class
+edu/brandeis/spacegame/SpaceShip.class
